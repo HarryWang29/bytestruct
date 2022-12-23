@@ -6,7 +6,9 @@ import (
 	"unsafe"
 )
 
-func (r *ByteStruct) Marshal(v interface{}, optFuncs ...OptionFunc) ([]byte, error) {
+func (r *ByteStruct) Marshal(v interface{}) ([]byte, error) {
+	r.s = types.NewWriter()
+	r.s.Option = r.option
 	header := (*emptyInterface)(unsafe.Pointer(&v))
 	typ := header.typ
 	ptr := uintptr(header.ptr)
@@ -23,10 +25,7 @@ func (r *ByteStruct) Marshal(v interface{}, optFuncs ...OptionFunc) ([]byte, err
 		return nil, err
 	}
 	s := r.s
-	for _, optFunc := range optFuncs {
-		optFunc(s.Option)
-	}
-	if err := dec.DecodeStream(s, header.ptr); err != nil {
+	if err := dec.EncodeStream(s, header.ptr); err != nil {
 		return nil, err
 	}
 	return s.Bytes(), nil

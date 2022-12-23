@@ -1,62 +1,45 @@
 package bytestruct
 
 import (
-    "bytes"
-    "encoding/binary"
-    "encoding/hex"
-    "github.com/HarryWang29/bytestruct/runtime"
-    "github.com/HarryWang29/bytestruct/types"
-    "io"
-    "unsafe"
+	"encoding/binary"
+	"github.com/HarryWang29/bytestruct/runtime"
+	"github.com/HarryWang29/bytestruct/types"
+	"unsafe"
 )
 
 type ByteStruct struct {
-    s     *types.Stream
-    order binary.ByteOrder
-    debug bool
+	s      *types.Stream
+	order  binary.ByteOrder
+	option *types.Option
 }
 
-func NewFromBytes(data []byte, order binary.ByteOrder, debug bool) *ByteStruct {
-    return NewReader(bytes.NewReader(data), order, debug)
+func NewWriter(order binary.ByteOrder, optionFunc ...OptionFunc) *ByteStruct {
+	bs := &ByteStruct{
+		order: order,
+		option: &types.Option{
+			Order: order,
+		},
+	}
+	for _, o := range optionFunc {
+		o(bs.option)
+	}
+	return bs
 }
 
-func NewFromHexString(data string, order binary.ByteOrder, debug bool) (*ByteStruct, error) {
-    decodeString, err := hex.DecodeString(data)
-    if err != nil {
-        return nil, err
-    }
-    return NewReader(bytes.NewReader(decodeString), order, debug), nil
-}
-
-func NewWriter(order binary.ByteOrder, debug bool) *ByteStruct {
-    bs := &ByteStruct{
-        s:     types.NewWriter(),
-        order: order,
-        debug: debug,
-    }
-    bs.s.Option = &types.Option{
-        Order: order,
-    }
-    return bs
-}
-
-func NewReader(r io.ReadSeeker, order binary.ByteOrder, debug bool) *ByteStruct {
-    bs := &ByteStruct{
-        s:     types.NewReader(r),
-        order: order,
-        debug: debug,
-    }
-    bs.s.Option = &types.Option{
-        Order: order,
-    }
-    return bs
-}
-
-func (r *ByteStruct) SetDebug(debug bool) {
-    r.debug = debug
+func NewReader(order binary.ByteOrder, optionFunc ...OptionFunc) *ByteStruct {
+	bs := &ByteStruct{
+		order: order,
+		option: &types.Option{
+			Order: order,
+		},
+	}
+	for _, o := range optionFunc {
+		o(bs.option)
+	}
+	return bs
 }
 
 type emptyInterface struct {
-    typ *runtime.Type
-    ptr unsafe.Pointer
+	typ *runtime.Type
+	ptr unsafe.Pointer
 }
