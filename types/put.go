@@ -7,20 +7,21 @@ import (
 )
 
 var (
-	PutUint8   = put
-	PutUint16  = put
-	PutUint32  = put
-	PutUint64  = put
-	PutInt8    = put
-	PutInt16   = put
-	PutInt32   = put
-	PutInt64   = put
-	PutFloat32 = put
-	PutFloat64 = put
-	PutBool    = put
-	PutString  = putString
-	PutLen     = put
-	PutBytes   = putBytes
+	PutUint8    = put
+	PutUint16   = put
+	PutUint32   = put
+	PutUint64   = put
+	PutInt8     = put
+	PutInt16    = put
+	PutInt32    = put
+	PutInt64    = put
+	PutFloat32  = put
+	PutFloat64  = put
+	PutBool     = put
+	PutString   = putString
+	PutLen      = put
+	PutBytes    = putBytes
+	PutSliceLen = PutUint8
 )
 
 func put(opt *Option, buf *bytes.Buffer, data interface{}) error {

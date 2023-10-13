@@ -144,7 +144,7 @@ func (d *sliceType) DecodeStream(s *Stream, p unsafe.Pointer) error {
 
 func (d *sliceType) EncodeStream(s *Stream, p unsafe.Pointer) error {
 	vLen := (*sliceHeader)(p).len
-	if err := PutUint8(s.Option, &s.w, uint8(vLen)); err != nil {
+	if err := PutSliceLen(s.Option, &s.w, uint8(vLen)); err != nil {
 		return err
 	}
 	for i := 0; i < vLen; i++ {

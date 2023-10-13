@@ -111,5 +111,8 @@ func SetPutLen(f func(*types.Option, *bytes.Buffer, interface{}) error) {
 func SetPutBytes(f func(*types.Option, *bytes.Buffer, []byte) error) {
 	types.PutBytes = f
 }
+func SetPutSliceLen(f func(*types.Option, *bytes.Buffer, interface{}) error) {
+	types.PutSliceLen = f
+}
 
 type OptionFunc func(option *types.Option)
